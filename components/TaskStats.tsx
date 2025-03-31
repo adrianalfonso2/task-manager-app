@@ -5,7 +5,7 @@ import { ThemedText } from './ThemedText';
 import { useAppTheme } from '@/hooks/useAppTheme';
 
 export const TaskStats: React.FC = () => {
-  const { tasks } = useTaskContext();
+  const { tasks, showArchived } = useTaskContext();
   const { theme, styles: themeStyles } = useAppTheme();
   
   const completedTasks = tasks.filter(task => task.completed).length;
@@ -16,6 +16,9 @@ export const TaskStats: React.FC = () => {
 
   return (
     <View style={[styles.container, themeStyles.card]}>
+      <ThemedText style={[styles.title, { color: theme.text }]}>
+        {showArchived ? 'Archive' : 'Active Tasks'}
+      </ThemedText>
       <View style={styles.statsContainer}>
         <View style={styles.statItem}>
           <ThemedText style={[styles.statValue, { color: theme.text }]}>{totalTasks}</ThemedText>
@@ -47,6 +50,12 @@ const styles = StyleSheet.create({
     padding: 16,
     margin: 16,
     marginTop: 8,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 12,
+    textAlign: 'center',
   },
   statsContainer: {
     flexDirection: 'row',

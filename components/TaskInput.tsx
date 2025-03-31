@@ -5,11 +5,14 @@ import { useTaskContext } from '../app/context/TaskContext';
 import * as Haptics from 'expo-haptics';
 import { useAppTheme } from '@/hooks/useAppTheme';
 import { CategorySelector } from './CategorySelector';
+import { PrioritySelector } from './PrioritySelector';
+import { PriorityType } from '@/app/types';
 
 export const TaskInput: React.FC = () => {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('4'); // Default to 'Other'
+  const [selectedPriority, setSelectedPriority] = useState<PriorityType>('medium'); // Default to 'medium'
   const { addTask } = useTaskContext();
   const { theme, styles: themeStyles } = useAppTheme();
 
@@ -18,10 +21,10 @@ export const TaskInput: React.FC = () => {
       if (Platform.OS === 'ios' || Platform.OS === 'android') {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       }
-      addTask(taskTitle.trim(), taskDescription.trim(), selectedCategory);
+      addTask(taskTitle.trim(), taskDescription.trim(), selectedCategory, selectedPriority);
       setTaskTitle('');
       setTaskDescription('');
-      // Keep the selected category for the next task
+      // Keep the selected category and priority for the next task
     }
   };
 
@@ -64,6 +67,10 @@ export const TaskInput: React.FC = () => {
       <CategorySelector 
         selectedCategory={selectedCategory} 
         onSelectCategory={setSelectedCategory} 
+      />
+      <PrioritySelector
+        selectedPriority={selectedPriority}
+        onSelectPriority={setSelectedPriority}
       />
     </View>
   );

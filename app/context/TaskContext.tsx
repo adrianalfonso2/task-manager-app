@@ -4,9 +4,12 @@ import { Task, Category, CategoryType, CATEGORY_COLORS, CATEGORY_ICONS } from '.
 interface TaskContextType {
   tasks: Task[];
   categories: Category[];
-  addTask: (title: string, description: string, category: string) => void;
+  showArchived: boolean;
+  addTask: (title: string, description: string, category: string, priority: string) => void;
   toggleComplete: (id: string) => void;
   deleteTask: (id: string) => void;
+  archiveTask: (id: string) => void;
+  toggleShowArchived: () => void;
   getTasksByCategory: (categoryId: string) => Task[];
 }
 
@@ -14,6 +17,7 @@ const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
 export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [showArchived, setShowArchived] = useState<boolean>(false);
   const [categories, setCategories] = useState<Category[]>([
     {
       id: '1',
@@ -41,13 +45,15 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   ]);
 
-  const addTask = (title: string, description: string, category: string = '4') => {
+  const addTask = (title: string, description: string, category: string = '4', priority: string = 'medium') => {
     const newTask: Task = {
       id: Date.now().toString(),
       title,
       description,
       completed: false,
-      category
+      category,
+      priority: priority as any,
+      archived: false
     };
     setTasks((prevTasks) => [...prevTasks, newTask]);
   };
@@ -64,17 +70,38 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
   };
 
-  const getTasksByCategory = (categoryId: string) => {
-    return tasks.filter(task => task.category === categoryId);
+  const archiveTask = (id: string) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === id ? { ...task, archived: true } : task
+      )
+    );
   };
+
+  const toggleShowArchived = () => {
+    setShowArchived((prev) => !prev);
+  };
+
+  const getTasksByCategory = (categoryId: string) => {
+    return tasks.filter(task => 
+      task.category === categoryId && 
+      task.archived === showArchived
+    );
+  };
+
+  // Filter tasks based on whether we're showing archived or active tasks
+  const filteredTasks = tasks.filter(task => task.archived === showArchived);
 
   return (
     <TaskContext.Provider value={{ 
-      tasks, 
+      tasks: filteredTasks, 
       categories, 
+      showArchived,
       addTask, 
       toggleComplete, 
       deleteTask,
+      archiveTask,
+      toggleShowArchived,
       getTasksByCategory
     }}>
       {children}

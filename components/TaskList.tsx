@@ -8,7 +8,7 @@ import { CategoryFilter } from './CategoryFilter';
 
 export const TaskList: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
-  const { tasks } = useTaskContext();
+  const { tasks, showArchived } = useTaskContext();
   const { theme, styles: themeStyles } = useAppTheme();
 
   const filteredTasks = categoryFilter
@@ -18,9 +18,13 @@ export const TaskList: React.FC = () => {
   const renderEmptyList = () => (
     <View style={styles.emptyContainer}>
       <ThemedText style={[styles.emptyText, { color: theme.text }]}>
-        {categoryFilter
-          ? "No tasks in this category. Add a task with this category to see it here!"
-          : "No tasks yet. Add a task to get started!"}
+        {showArchived 
+          ? (categoryFilter
+            ? "No archived tasks in this category."
+            : "No archived tasks yet.")
+          : (categoryFilter
+            ? "No tasks in this category. Add a task with this category to see it here!"
+            : "No tasks yet. Add a task to get started!")}
       </ThemedText>
     </View>
   );

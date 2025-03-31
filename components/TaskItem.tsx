@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Task } from '../app/types';
+import { Task, PRIORITY_COLORS, PRIORITY_ICONS } from '../app/types';
 import { ThemedText } from './ThemedText';
 import { useTaskContext } from '../app/context/TaskContext';
 import * as Haptics from 'expo-haptics';
@@ -12,7 +12,7 @@ interface TaskItemProps {
 }
 
 export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
-  const { toggleComplete, deleteTask, categories } = useTaskContext();
+  const { toggleComplete, deleteTask, archiveTask, categories, showArchived } = useTaskContext();
   const { theme, styles: themeStyles } = useAppTheme();
   
   const category = categories.find(cat => cat.id === task.category);
@@ -29,6 +29,13 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
     deleteTask(task.id);
+  };
+
+  const handleArchive = () => {
+    if (Platform.OS === 'ios' || Platform.OS === 'android') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
+    archiveTask(task.id);
   };
 
   return (
@@ -49,16 +56,24 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
       </TouchableOpacity>
       <View style={styles.contentContainer}>
         <View style={styles.titleRow}>
-          <ThemedText
-            style={[
-              styles.title, 
-              { color: theme.text },
-              task.completed && styles.completedText
-            ]}
-            numberOfLines={1}
-          >
-            {task.title}
-          </ThemedText>
+          <View style={styles.titleWithPriority}>
+            <Ionicons 
+              name={PRIORITY_ICONS[task.priority] as any} 
+              size={16} 
+              color={PRIORITY_COLORS[task.priority]} 
+              style={styles.priorityIcon} 
+            />
+            <ThemedText
+              style={[
+                styles.title, 
+                { color: theme.text },
+                task.completed && styles.completedText
+              ]}
+              numberOfLines={1}
+            >
+              {task.title}
+            </ThemedText>
+          </View>
           {category && (
             <View 
               style={[
@@ -86,9 +101,16 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
           </ThemedText>
         ) : null}
       </View>
-      <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-        <Ionicons name="trash-outline" size={22} color="#ff3b30" />
-      </TouchableOpacity>
+      <View style={styles.actionsContainer}>
+        {!showArchived && (
+          <TouchableOpacity style={styles.actionButton} onPress={handleArchive}>
+            <Ionicons name="archive-outline" size={22} color={theme.text + 'AA'} />
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity style={styles.actionButton} onPress={handleDelete}>
+          <Ionicons name="trash-outline" size={22} color="#ff3b30" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -124,10 +146,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 4,
   },
+  titleWithPriority: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 8,
+  },
+  priorityIcon: {
+    marginRight: 6,
+  },
   title: {
     fontSize: 16,
     flex: 1,
-    marginRight: 8,
   },
   description: {
     fontSize: 14,
@@ -136,7 +166,11 @@ const styles = StyleSheet.create({
     textDecorationLine: 'line-through',
     opacity: 0.6,
   },
-  deleteButton: {
+  actionsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  actionButton: {
     padding: 8,
   },
   categoryTag: {
