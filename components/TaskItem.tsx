@@ -12,8 +12,10 @@ interface TaskItemProps {
 }
 
 export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
-  const { toggleComplete, deleteTask } = useTaskContext();
+  const { toggleComplete, deleteTask, categories } = useTaskContext();
   const { theme, styles: themeStyles } = useAppTheme();
+  
+  const category = categories.find(cat => cat.id === task.category);
 
   const handleToggleComplete = () => {
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
@@ -37,8 +39,8 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
       >
         <View style={[
           styles.checkbox, 
-          { borderColor: theme.primaryButtonBackground },
-          task.completed && [styles.checkboxCompleted, { backgroundColor: theme.primaryButtonBackground }]
+          { borderColor: category ? category.color : theme.primaryButtonBackground },
+          task.completed && [styles.checkboxCompleted, { backgroundColor: category ? category.color : theme.primaryButtonBackground }]
         ]}>
           {task.completed && (
             <Ionicons name="checkmark" size={18} color="#fff" />
@@ -46,16 +48,31 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
         </View>
       </TouchableOpacity>
       <View style={styles.contentContainer}>
-        <ThemedText
-          style={[
-            styles.title, 
-            { color: theme.text },
-            task.completed && styles.completedText
-          ]}
-          numberOfLines={1}
-        >
-          {task.title}
-        </ThemedText>
+        <View style={styles.titleRow}>
+          <ThemedText
+            style={[
+              styles.title, 
+              { color: theme.text },
+              task.completed && styles.completedText
+            ]}
+            numberOfLines={1}
+          >
+            {task.title}
+          </ThemedText>
+          {category && (
+            <View 
+              style={[
+                styles.categoryTag, 
+                { backgroundColor: category.color + '20', borderColor: category.color }
+              ]}
+            >
+              <Ionicons name={category.icon as any} size={12} color={category.color} style={styles.categoryIcon} />
+              <ThemedText style={[styles.categoryName, { color: category.color }]}>
+                {category.name}
+              </ThemedText>
+            </View>
+          )}
+        </View>
         {task.description ? (
           <ThemedText
             style={[
@@ -101,9 +118,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
   title: {
     fontSize: 16,
-    marginBottom: 4,
+    flex: 1,
+    marginRight: 8,
   },
   description: {
     fontSize: 14,
@@ -114,5 +138,20 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     padding: 8,
+  },
+  categoryTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  categoryIcon: {
+    marginRight: 4,
+  },
+  categoryName: {
+    fontSize: 10,
+    fontWeight: '500',
   },
 }); 

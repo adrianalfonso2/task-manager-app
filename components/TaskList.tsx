@@ -1,31 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { useTaskContext } from '../app/context/TaskContext';
 import { TaskItem } from './TaskItem';
 import { ThemedText } from './ThemedText';
 import { useAppTheme } from '@/hooks/useAppTheme';
+import { CategoryFilter } from './CategoryFilter';
 
 export const TaskList: React.FC = () => {
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const { tasks } = useTaskContext();
   const { theme, styles: themeStyles } = useAppTheme();
 
-  if (tasks.length === 0) {
-    return (
-      <View style={styles.emptyContainer}>
-        <ThemedText style={[styles.emptyText, { color: theme.text }]}>
-          No tasks yet. Add a task to get started!
-        </ThemedText>
-      </View>
-    );
-  }
+  const filteredTasks = categoryFilter
+    ? tasks.filter(task => task.category === categoryFilter)
+    : tasks;
+
+  const renderEmptyList = () => (
+    <View style={styles.emptyContainer}>
+      <ThemedText style={[styles.emptyText, { color: theme.text }]}>
+        {categoryFilter
+          ? "No tasks in this category. Add a task with this category to see it here!"
+          : "No tasks yet. Add a task to get started!"}
+      </ThemedText>
+    </View>
+  );
 
   return (
-    <FlatList
-      data={tasks}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => <TaskItem task={item} />}
-      contentContainerStyle={styles.listContent}
-    />
+    <View style={{ flex: 1 }}>
+      <CategoryFilter
+        selectedFilter={categoryFilter}
+        onSelectFilter={setCategoryFilter}
+      />
+      
+      {filteredTasks.length === 0 ? (
+        renderEmptyList()
+      ) : (
+        <FlatList
+          data={filteredTasks}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <TaskItem task={item} />}
+          contentContainerStyle={styles.listContent}
+        />
+      )}
+    </View>
   );
 };
 

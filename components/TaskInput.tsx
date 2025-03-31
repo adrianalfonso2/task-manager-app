@@ -4,10 +4,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTaskContext } from '../app/context/TaskContext';
 import * as Haptics from 'expo-haptics';
 import { useAppTheme } from '@/hooks/useAppTheme';
+import { CategorySelector } from './CategorySelector';
 
 export const TaskInput: React.FC = () => {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('4'); // Default to 'Other'
   const { addTask } = useTaskContext();
   const { theme, styles: themeStyles } = useAppTheme();
 
@@ -16,46 +18,53 @@ export const TaskInput: React.FC = () => {
       if (Platform.OS === 'ios' || Platform.OS === 'android') {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       }
-      addTask(taskTitle.trim(), taskDescription.trim());
+      addTask(taskTitle.trim(), taskDescription.trim(), selectedCategory);
       setTaskTitle('');
       setTaskDescription('');
+      // Keep the selected category for the next task
     }
   };
 
   return (
-    <View style={[styles.container, { borderBottomColor: theme.borderColor }]}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={[themeStyles.textInput, styles.titleInput]}
-          placeholder="Task title..."
-          placeholderTextColor={theme.text + '80'}
-          value={taskTitle}
-          onChangeText={setTaskTitle}
-          returnKeyType="next"
-        />
-        <TextInput
-          style={[themeStyles.textInput, styles.descriptionInput]}
-          placeholder="Task description..."
-          placeholderTextColor={theme.text + '80'}
-          value={taskDescription}
-          onChangeText={setTaskDescription}
-          onSubmitEditing={handleAddTask}
-          returnKeyType="done"
-          multiline={true}
-          numberOfLines={2}
-        />
+    <View style={{ borderBottomColor: theme.borderColor }}>
+      <View style={[styles.container, { borderBottomColor: theme.borderColor, borderBottomWidth: StyleSheet.hairlineWidth }]}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={[themeStyles.textInput, styles.titleInput]}
+            placeholder="Task title..."
+            placeholderTextColor={theme.text + '80'}
+            value={taskTitle}
+            onChangeText={setTaskTitle}
+            returnKeyType="next"
+          />
+          <TextInput
+            style={[themeStyles.textInput, styles.descriptionInput]}
+            placeholder="Task description..."
+            placeholderTextColor={theme.text + '80'}
+            value={taskDescription}
+            onChangeText={setTaskDescription}
+            onSubmitEditing={handleAddTask}
+            returnKeyType="done"
+            multiline={true}
+            numberOfLines={2}
+          />
+        </View>
+        <TouchableOpacity
+          style={[styles.addButton, !taskTitle.trim() && styles.addButtonDisabled]}
+          onPress={handleAddTask}
+          disabled={!taskTitle.trim()}
+        >
+          <Ionicons
+            name="add-circle"
+            size={36}
+            color={taskTitle.trim() ? theme.primaryButtonBackground : theme.text + '50'}
+          />
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={[styles.addButton, !taskTitle.trim() && styles.addButtonDisabled]}
-        onPress={handleAddTask}
-        disabled={!taskTitle.trim()}
-      >
-        <Ionicons
-          name="add-circle"
-          size={36}
-          color={taskTitle.trim() ? theme.primaryButtonBackground : theme.text + '50'}
-        />
-      </TouchableOpacity>
+      <CategorySelector 
+        selectedCategory={selectedCategory} 
+        onSelectCategory={setSelectedCategory} 
+      />
     </View>
   );
 };
@@ -65,7 +74,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
-    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   inputContainer: {
     flex: 1,
