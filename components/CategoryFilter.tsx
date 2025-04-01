@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemedText } from './ThemedText';
 import { useTaskContext } from '../app/context/TaskContext';
 import { useAppTheme } from '@/hooks/useAppTheme';
+import Animated, { FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 interface CategoryFilterProps {
   selectedFilter: string | null;
@@ -16,9 +17,34 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
 }) => {
   const { categories } = useTaskContext();
   const { theme } = useAppTheme();
+  const [isAnimating, setIsAnimating] = useState(false);
+  const buttonScale = useSharedValue(1);
+
+  const handleSelectFilter = (categoryId: string | null) => {
+    if (isAnimating) return;
+    
+    setIsAnimating(true);
+    buttonScale.value = withSpring(0.95, {}, () => {
+      buttonScale.value = withSpring(1, {}, () => {
+        setIsAnimating(false);
+      });
+    });
+    
+    onSelectFilter(categoryId);
+  };
+
+  const buttonAnimStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: buttonScale.value }]
+    };
+  });
 
   return (
-    <View style={[styles.container, { borderBottomColor: theme.borderColor, borderBottomWidth: StyleSheet.hairlineWidth }]}>
+    <Animated.View 
+      style={[styles.container, { borderBottomColor: theme.borderColor, borderBottomWidth: StyleSheet.hairlineWidth }]}
+      entering={FadeIn.duration(400).delay(100)}
+      exiting={FadeOut.duration(200)}
+    >
       <ThemedText style={[styles.label, { color: theme.text + 'CC' }]}>
         Filter by:
       </ThemedText>
@@ -37,22 +63,25 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
               borderColor: theme.primaryButtonBackground,
             },
           ]}
-          onPress={() => onSelectFilter(null)}
+          onPress={() => handleSelectFilter(null)}
+          disabled={isAnimating}
         >
-          <Ionicons
-            name="layers-outline"
-            size={16}
-            color={selectedFilter === null ? '#fff' : theme.primaryButtonBackground}
-            style={styles.categoryIcon}
-          />
-          <ThemedText
-            style={[
-              styles.categoryName,
-              { color: selectedFilter === null ? '#fff' : theme.primaryButtonBackground },
-            ]}
-          >
-            All
-          </ThemedText>
+          <Animated.View style={selectedFilter === null ? buttonAnimStyle : undefined}>
+            <Ionicons
+              name="layers-outline"
+              size={16}
+              color={selectedFilter === null ? '#fff' : theme.primaryButtonBackground}
+              style={styles.categoryIcon}
+            />
+            <ThemedText
+              style={[
+                styles.categoryName,
+                { color: selectedFilter === null ? '#fff' : theme.primaryButtonBackground },
+              ]}
+            >
+              All
+            </ThemedText>
+          </Animated.View>
         </TouchableOpacity>
 
         {categories.map((category) => (
@@ -67,26 +96,29 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
                 borderColor: category.color,
               },
             ]}
-            onPress={() => onSelectFilter(category.id)}
+            onPress={() => handleSelectFilter(category.id)}
+            disabled={isAnimating}
           >
-            <Ionicons
-              name={category.icon as any}
-              size={16}
-              color={selectedFilter === category.id ? '#fff' : category.color}
-              style={styles.categoryIcon}
-            />
-            <ThemedText
-              style={[
-                styles.categoryName,
-                { color: selectedFilter === category.id ? '#fff' : category.color },
-              ]}
-            >
-              {category.name}
-            </ThemedText>
+            <Animated.View style={selectedFilter === category.id ? buttonAnimStyle : undefined}>
+              <Ionicons
+                name={category.icon as any}
+                size={16}
+                color={selectedFilter === category.id ? '#fff' : category.color}
+                style={styles.categoryIcon}
+              />
+              <ThemedText
+                style={[
+                  styles.categoryName,
+                  { color: selectedFilter === category.id ? '#fff' : category.color },
+                ]}
+              >
+                {category.name}
+              </ThemedText>
+            </Animated.View>
           </TouchableOpacity>
         ))}
       </ScrollView>
-    </View>
+    </Animated.View>
   );
 };
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity, View, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Task, PRIORITY_COLORS, PRIORITY_ICONS } from '../app/types';
@@ -6,53 +6,123 @@ import { ThemedText } from './ThemedText';
 import { useTaskContext } from '../app/context/TaskContext';
 import * as Haptics from 'expo-haptics';
 import { useAppTheme } from '@/hooks/useAppTheme';
+import Animated, { 
+  FadeIn, 
+  FadeOut, 
+  SlideInRight,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring
+} from 'react-native-reanimated';
 
 interface TaskItemProps {
   task: Task;
+  onComplete?: () => void;
 }
 
-export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
+export const TaskItem: React.FC<TaskItemProps> = ({ task, onComplete }) => {
   const { toggleComplete, deleteTask, archiveTask, categories, showArchived } = useTaskContext();
   const { theme, styles: themeStyles } = useAppTheme();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const deleteTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   const category = categories.find(cat => cat.id === task.category);
+  const checkboxScale = useSharedValue(1);
+
+  // Clean up any pending timeouts when component unmounts
+  useEffect(() => {
+    return () => {
+      if (deleteTimeoutRef.current) {
+        clearTimeout(deleteTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleToggleComplete = () => {
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    toggleComplete(task.id);
+    
+    if (!task.completed) {
+      checkboxScale.value = withSpring(1.3, {}, () => {
+        checkboxScale.value = withSpring(1);
+      });
+      
+      // Toggle immediately to avoid animation issues
+      toggleComplete(task.id);
+      if (onComplete) onComplete();
+    } else {
+      toggleComplete(task.id);
+    }
   };
 
   const handleDelete = () => {
+    if (isDeleting) return; // Prevent multiple clicks
+    
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
-    deleteTask(task.id);
+    
+    // Set deleting state
+    setIsDeleting(true);
+    
+    // Delete directly without animation for web to avoid DOM issues
+    deleteTimeoutRef.current = setTimeout(() => {
+      try {
+        deleteTask(task.id);
+      } catch (error) {
+        console.error("Error deleting task:", error);
+      }
+    }, Platform.OS === 'web' ? 10 : 300);
   };
 
   const handleArchive = () => {
+    if (isDeleting) return;
+    
     if (Platform.OS === 'ios' || Platform.OS === 'android') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
+    
+    // Archive immediately
     archiveTask(task.id);
   };
 
+  const checkboxAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: checkboxScale.value }],
+    };
+  });
+
+  // If we're deleting, don't render the item at all on web
+  if (isDeleting && Platform.OS === 'web') {
+    return null;
+  }
+
   return (
-    <View style={[styles.container, themeStyles.taskItem]}>
+    <Animated.View 
+      style={[styles.container, themeStyles.taskItem]}
+      entering={SlideInRight.duration(300)}
+      exiting={FadeOut.duration(200)}
+    >
       <TouchableOpacity
         style={styles.checkboxContainer}
         onPress={handleToggleComplete}
+        disabled={isDeleting}
       >
-        <View style={[
-          styles.checkbox, 
-          { borderColor: category ? category.color : theme.primaryButtonBackground },
-          task.completed && [styles.checkboxCompleted, { backgroundColor: category ? category.color : theme.primaryButtonBackground }]
-        ]}>
+        <Animated.View 
+          style={[
+            styles.checkbox, 
+            { borderColor: category ? category.color : theme.primaryButtonBackground },
+            task.completed && [styles.checkboxCompleted, { backgroundColor: category ? category.color : theme.primaryButtonBackground }],
+            checkboxAnimatedStyle
+          ]}
+        >
           {task.completed && (
-            <Ionicons name="checkmark" size={18} color="#fff" />
+            <Animated.View entering={FadeIn.duration(200)}>
+              <Ionicons name="checkmark" size={18} color="#fff" />
+            </Animated.View>
           )}
-        </View>
+        </Animated.View>
       </TouchableOpacity>
       <View style={styles.contentContainer}>
         <View style={styles.titleRow}>
@@ -103,15 +173,31 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
       </View>
       <View style={styles.actionsContainer}>
         {!showArchived && (
-          <TouchableOpacity style={styles.actionButton} onPress={handleArchive}>
-            <Ionicons name="archive-outline" size={22} color={theme.text + 'AA'} />
+          <TouchableOpacity 
+            style={styles.actionButton} 
+            onPress={handleArchive}
+            disabled={isDeleting}
+          >
+            <Animated.View entering={FadeIn}>
+              <Ionicons name="archive-outline" size={22} color={theme.text + 'AA'} />
+            </Animated.View>
           </TouchableOpacity>
         )}
-        <TouchableOpacity style={styles.actionButton} onPress={handleDelete}>
-          <Ionicons name="trash-outline" size={22} color="#ff3b30" />
+        <TouchableOpacity 
+          style={styles.actionButton} 
+          onPress={handleDelete}
+          disabled={isDeleting}
+        >
+          <Animated.View entering={FadeIn}>
+            <Ionicons 
+              name="trash-outline" 
+              size={22} 
+              color={isDeleting ? (theme.text + '50') : "#ff3b30"} 
+            />
+          </Animated.View>
         </TouchableOpacity>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

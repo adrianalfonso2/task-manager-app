@@ -7,6 +7,7 @@ import { useAppTheme } from '@/hooks/useAppTheme';
 import { CategorySelector } from './CategorySelector';
 import { PrioritySelector } from './PrioritySelector';
 import { PriorityType } from '@/app/types';
+import Animated, { FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 export const TaskInput: React.FC = () => {
   const [taskTitle, setTaskTitle] = useState('');
@@ -15,9 +16,14 @@ export const TaskInput: React.FC = () => {
   const [selectedPriority, setSelectedPriority] = useState<PriorityType>('medium'); // Default to 'medium'
   const { addTask } = useTaskContext();
   const { theme, styles: themeStyles } = useAppTheme();
+  const buttonScale = useSharedValue(1);
 
   const handleAddTask = () => {
     if (taskTitle.trim()) {
+      buttonScale.value = withSpring(0.8, {}, () => {
+        buttonScale.value = withSpring(1);
+      });
+      
       if (Platform.OS === 'ios' || Platform.OS === 'android') {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       }
@@ -28,8 +34,18 @@ export const TaskInput: React.FC = () => {
     }
   };
 
+  const buttonAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: buttonScale.value }]
+    };
+  });
+
   return (
-    <View style={{ borderBottomColor: theme.borderColor }}>
+    <Animated.View 
+      style={{ borderBottomColor: theme.borderColor }}
+      entering={FadeIn.duration(400)}
+      exiting={FadeOut.duration(300)}
+    >
       <View style={[styles.container, { borderBottomColor: theme.borderColor, borderBottomWidth: StyleSheet.hairlineWidth }]}>
         <View style={styles.inputContainer}>
           <TextInput
@@ -57,11 +73,13 @@ export const TaskInput: React.FC = () => {
           onPress={handleAddTask}
           disabled={!taskTitle.trim()}
         >
-          <Ionicons
-            name="add-circle"
-            size={36}
-            color={taskTitle.trim() ? theme.primaryButtonBackground : theme.text + '50'}
-          />
+          <Animated.View style={buttonAnimatedStyle}>
+            <Ionicons
+              name="add-circle"
+              size={36}
+              color={taskTitle.trim() ? theme.primaryButtonBackground : theme.text + '50'}
+            />
+          </Animated.View>
         </TouchableOpacity>
       </View>
       <CategorySelector 
@@ -72,7 +90,7 @@ export const TaskInput: React.FC = () => {
         selectedPriority={selectedPriority}
         onSelectPriority={setSelectedPriority}
       />
-    </View>
+    </Animated.View>
   );
 };
 
