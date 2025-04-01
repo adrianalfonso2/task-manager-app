@@ -1,39 +1,34 @@
+// ThemeToggle.tsx
+// A component that provides a button to toggle between light and dark themes
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from '@/app/context/ThemeContext';
+import { useAppTheme } from '@/app/context/ThemeContext';
 
+// ThemeToggle component that displays a sun/moon icon based on current theme
 export const ThemeToggle: React.FC = () => {
-  const { theme, toggleTheme } = useTheme();
+  // Get current theme and toggle function from context
+  const { theme, toggleTheme } = useAppTheme();
 
-  // Show sun icon for dark mode (indicating you can switch to light)
-  // and moon icon for light mode (indicating you can switch to dark)
-  const icon = theme === 'light' 
-    ? <Ionicons name="moon" size={24} color="#6e6e70" />
-    : <Ionicons name="sunny" size={24} color="#f8cf46" />;
-
-  // Get label text for accessibility
-  const accessibilityLabel = theme === 'light'
-    ? 'Light mode active. Tap to switch to dark mode.'
-    : 'Dark mode active. Tap to switch to light mode.';
+  // Determine which icon to show based on current theme
+  const icon = theme === 'light' ? 'moon' : 'sunny';
 
   return (
-    <TouchableOpacity
+    <TouchableOpacity 
       onPress={toggleTheme}
-      style={styles.container}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole="button"
+      style={styles.button}
+      accessibilityLabel={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
-      {icon}
+      <Ionicons name={icon} size={24} color={theme === 'light' ? '#000' : '#fff'} />
     </TouchableOpacity>
   );
 };
 
+// Styles for the theme toggle button
 const styles = StyleSheet.create({
-  container: {
+  button: {
     padding: 8,
     borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'transparent',
   },
 }); 

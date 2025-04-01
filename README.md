@@ -1,115 +1,212 @@
 # Task Manager App
 
-A simple task management application that was built with React Native and Expo. This app allows users to add tasks, mark them as complete, delete them, and switch between light and dark themes.
+This is a feature-rich task management application built with React Native and Expo. This app allows users to add, organize, save, delete and track tasks with an intuitive interface that adapts to light and dark themes based on user preference.
 
 ## Features
 
-- Add new tasks with descriptions
-- Mark tasks as complete 
-- Delete tasks
-- Task list display showing both complete and incomplete tasks
-- Visual feedback for task interactions (haptic feedback)
-- Task statistics with progress tracking
-- Dark/Light mode toggle
+- **Task Management**
+  - Create new tasks with detailed descriptions
+  - Mark tasks as complete with visual indicators
+  - Delete unwanted tasks with trash icon or swipe gesture
+  - Archive tasks to maintain a clean workspace and saved completed tasks
+  - Categorize tasks by type (Personal, Work, School, Other)
+  - Set priority levels for tasks (Low, Medium, High)
+
+- **User Interface**
+  - Clean, modern design with smooth animations
+  - Responsive layout that works across different screen sizes
+  - Progress tracking with visual completion bar
+  - Task statistics dashboard showing completion metrics
+  - Interactive UI elements with haptic feedback and animation
+  
+
+- **Theme System**
+  - Toggle between light and dark themes with a single tap
+  - Theme automatically adapts to device settings
+  - Contains a consistent theme across all UI components
+  - Optimized contrast for readability in both modes
+  
+
+- **Performance**
+  - Fast, native-like performance
+  - Efficient state management using React Context
+  - Optimized rendering with memo and callback patterns
+  - Smooth transitions between screens and states
 
 ## Screenshots
 
-
+![Screenshot Description](./images/Screenshot.png)
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js (v14 or later)
-- npm or yarn
-- Expo CLI (install with `npm install -g expo-cli`)
+- npm (v6 or later) or yarn (v1.22 or later)
+- Expo CLI (`npm install -g expo-cli`)
+- For mobile development:
+  - iOS: macOS with Xcode (13+)
+  - Android: Android Studio with SDK and emulator
 
 ### Installation
 
 1. Clone the repository
-
    ```bash
    git clone <repository-url>
    cd task-manager-app
    ```
 
 2. Install dependencies
-
    ```bash
    npm install
+   # or with yarn
+   yarn install
    ```
 
-3. Start the app
-
+3. Start the development server
    ```bash
    npx expo start
    ```
 
 ### Running the App
 
-After starting the development server with `npx expo start`, you'll have several options to run the app:
+The Task Manager app can be run in several environments:
 
-- Press `w` to open in a web browser
-- Press `a` to open in an Android emulator (requires Android Studio setup)
-- Press `i` to open in an iOS simulator (requires Xcode, macOS only)
-- Scan the QR code with the Expo Go app on your mobile device
+- **Web Browser**: 
+  ```bash
+  npx expo start --web
+  ```
+
+- **Android Emulator**: 
+  ```bash
+  npx expo start --android
+  ```
+
+- **iOS Simulator**: 
+  ```bash
+  npx expo start --ios
+  ```
+
+- **Physical Device**: 
+  1. Install the Expo Go app from App Store/Google Play
+  2. Run `npx expo start`
+  3. Scan the QR code with your camera (iOS) or Expo Go app (Android)
 
 ## How to Use
 
-### Task Management
+### Managing Tasks
 
-1. **Add a task**: Enter a task description in the input field at the top and press the add button or hit return
-2. **Mark as complete**: Tap on the checkbox next to a task to toggle its completion status
-3. **Delete a task**: Tap the trash icon to delete a task
-4. **View statistics**: The app displays statistics showing total tasks, completed tasks, and overall progress
+1. **Adding a New Task**
+   - Tap the input field at the top of the screen
+   - Enter a task description
+   - Select a category (optional)
+   - Choose a priority level (optional)
+   - Tap "Add" or press Enter
 
-### Theme Switching
+2. **Completing Tasks**
+   - Tap the checkbox next to any task to mark it as complete
+   - Completed tasks will show a checkmark and strikethrough text
 
-- **Toggle between themes**: Tap the moon/sun icon in the top-right corner to switch between dark and light modes
-  - Moon icon indicates you're in light mode and can switch to dark mode
-  - Sun icon indicates you're in dark mode and can switch to light mode
+3. **Removing Tasks**
+   - Swipe left on any task to reveal the delete option
+   - Tap the trash icon to permanently remove the task
+
+4. **Task Organization**
+   - Use the category filters to show tasks by type
+   - Toggle the archive button to hide/show completed tasks
+   - Check the statistics panel to track your progress
+
+### Theme Customization
+
+- Tap the theme toggle icon (sun/moon) in the header
+  - When in light mode, you'll see a moon icon (tap to switch to dark mode)
+  - When in dark mode, you'll see a sun icon (tap to switch to light mode)
 
 ## App Architecture
 
 ### State Management
 
-- **React Context API**: Used for global state management without external libraries
-  - `TaskContext`: Manages the task list state and operations
-  - `ThemeContext`: Manages the theme state and toggling
+The app uses React's Context API for global state management:
+
+- **TaskContext**: Handles all task-related operations
+  - Stores the task list with completion status
+  - Provides methods for adding, updating, and deleting tasks
+  - Manages task filtering and sorting
+
+- **ThemeContext**: Controls the app's visual appearance
+  - Manages light/dark theme toggling
+  - Provides themed styles to all components
+  - Adapts to system preferences
 
 ### Component Structure
 
-- **Main Components**:
-  - `TaskInput`: Input field for adding new tasks
-  - `TaskList`: Container for rendering all tasks
-  - `TaskItem`: Individual task component with toggle and delete controls
-  - `TaskStats`: Displays task completion statistics and progress bar
-  - `ThemeToggle`: Button for switching between light and dark modes
+- **Core Components**:
+  - `TaskInput`: For creating new tasks
+  - `TaskList`: Container that renders all task items
+  - `TaskItem`: Individual task with interactive controls
+  - `TaskStats`: Visual representation of completion progress
+  - `CategoryFilter`: Filtering mechanism for task categories
+  - `PrioritySelector`: UI for selecting task priority
+  - `ThemeToggle`: Switch for light/dark mode
+
+- **UI Components**:
+  - `ThemedText`: Text that adapts to current theme
+  - `ThemedView`: Container that applies theme styles
+  - `ArchiveButton`: Toggle for showing/hiding completed tasks
+  - `ArchiveToggle`: Alternative UI for archive functionality
 
 ## Third-Party Libraries
 
-| Library | Purpose |
-|---------|---------|
-| React Native | Core framework for building cross-platform mobile apps |
-| Expo | Development platform providing tools and services for React Native |
-| Expo Haptics | Provides haptic feedback for user interactions |
-| Expo Vector Icons | Icon library including Ionicons for UI elements |
-| React Navigation | Tab-based navigation system |
-| React Native Reanimated | Powers animations in the app |
+| Library | Version | Purpose |
+|---------|---------|---------|
+| React Native | 0.71+ | Core framework for building native apps with React |
+| Expo | ^48.0.0 | Development platform with pre-built components and services |
+| Expo Router | ^1.0.0 | File-based routing system for navigation |
+| Expo Haptics | ^12.0.0 | Provides haptic feedback for user interactions |
+| Expo Status Bar | ^1.4.0 | Manages the status bar appearance |
+| React Native Reanimated | ^2.14.0 | Library for creating fluid animations |
+| React Native Gesture Handler | ^2.9.0 | Handles touch and gesture interactions |
+| Ionicons | via Expo | Icon set used throughout the UI |
 
 ## Troubleshooting
 
 ### Common Issues
 
-- **App not starting**: Try clearing the cache with `npx expo start --clear`
-- **Dependencies issues**: Ensure all dependencies are installed with `npm install`
-- **Web version issues**: For best experience, use a mobile device or emulator
+- **Metro bundler not starting**:
+  ```bash
+  # Kill any running instances and clear cache
+  pkill -f "npx expo" && npx expo start --clear
+  ```
+
+- **Dependencies errors**:
+  ```bash
+  # Reset node modules and reinstall
+  rm -rf node_modules && npm install
+  ```
+
+- **Expo Go connection issues**:
+  1. Ensure your mobile device is on the same network as your computer
+  2. Try using the "tunnel" connection option: `npx expo start --tunnel`
+
+- **Rendering issues**:
+  - Toggle between development and production mode
+  - Use a physical device for accurate rendering
+
+## Code Documentation
+
+The codebase includes comprehensive comments for all components and functions:
+
+- **Component files**: Include purpose, props documentation, and usage notes
+- **Hooks**: Detailed parameter and return value documentation
+- **Context providers**: Clear explanation of state management approach
+- **Style objects**: Notes about theming implementation
 
 ## Future Enhancements
 
-- Task categories/tags
-- Due dates for tasks
-- Task priority levels
-- Data persistence using AsyncStorage
-- Search and filter functionality
-- Push notifications for task reminders
+- Cloud synchronization for tasks across devices
+- Recurring task scheduling
+- Due date reminders with notifications
+- Data analytics and productivity insights
+- Collaborative task sharing
+- Rich text formatting for task descriptions
+- Customizable themes beyond light/dark

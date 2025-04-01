@@ -1,41 +1,52 @@
+// useAppTheme.ts
+// This hook provides themed styles and color values for the entire application
 import { StyleSheet } from 'react-native';
-import { useTheme } from '@/app/context/ThemeContext';
+import { useTheme as useContextTheme } from '@/app/context/ThemeContext';
 import { Colors } from '@/constants/Colors';
 
-// Expanded color palette
+// Expanded color palette that extends the basic Colors with more specific UI elements
 const extendedColors = {
   light: {
     ...Colors.light,
-    primaryBackground: '#f8f9fa',
-    secondaryBackground: '#ffffff',
-    cardBackground: '#ffffff',
-    borderColor: '#e1e4e8',
-    primaryButtonBackground: '#007aff',
-    primaryButtonText: '#ffffff',
-    inputBackground: '#f1f3f5',
-    headerBackground: '#ffffff',
-    taskItemBackground: '#ffffff',
-    statusBarStyle: 'dark' as 'dark' | 'light',
+    primaryBackground: '#f8f9fa',    // Main app background
+    secondaryBackground: '#ffffff',   // Secondary areas background
+    cardBackground: '#ffffff',        // Card component background
+    borderColor: '#e1e4e8',           // Border color for containers
+    primaryButtonBackground: '#007aff', // Primary action buttons
+    primaryButtonText: '#ffffff',     // Text on primary buttons
+    inputBackground: '#f1f3f5',       // Input field background
+    headerBackground: '#ffffff',      // Header background
+    taskItemBackground: '#ffffff',    // Task item background
+    statusBarStyle: 'dark' as 'dark' | 'light', // Status bar style
   },
   dark: {
     ...Colors.dark,
-    primaryBackground: '#121212',
-    secondaryBackground: '#1c1c1e',
-    cardBackground: '#252525',
-    borderColor: '#333333',
-    primaryButtonBackground: '#0a84ff',
-    primaryButtonText: '#ffffff',
-    inputBackground: '#2c2c2e',
-    headerBackground: '#1c1c1e',
-    taskItemBackground: '#252525',
-    statusBarStyle: 'light' as 'dark' | 'light',
+    primaryBackground: '#121212',     // Dark mode main background
+    secondaryBackground: '#1c1c1e',   // Dark mode secondary background
+    cardBackground: '#252525',        // Dark mode card background
+    borderColor: '#333333',           // Dark mode borders
+    primaryButtonBackground: '#0a84ff', // Dark mode primary buttons
+    primaryButtonText: '#ffffff',     // Dark mode button text
+    inputBackground: '#2c2c2e',       // Dark mode input background
+    headerBackground: '#1c1c1e',      // Dark mode header
+    taskItemBackground: '#252525',    // Dark mode task items
+    statusBarStyle: 'light' as 'dark' | 'light', // Dark mode status bar
   }
 };
 
+/**
+ * Custom hook that provides theme colors and pre-built styles
+ * 
+ * @returns {object} Object containing theme colors, pre-built styles, and current color scheme
+ */
 export function useAppTheme() {
-  const { colorScheme } = useTheme();
+  // Get current color scheme from theme context
+  const { theme: colorScheme } = useContextTheme();
+  
+  // Get theme colors based on current color scheme
   const theme = extendedColors[colorScheme];
 
+  // Pre-built styles that use theme colors
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -80,6 +91,7 @@ export function useAppTheme() {
     },
   });
 
+  // Return theme colors, styles, and current color scheme
   return { 
     theme, 
     styles, 

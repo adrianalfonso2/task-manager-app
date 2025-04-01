@@ -6,15 +6,16 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
-import { ThemeProvider } from '@/app/context/ThemeContext';
-import { useTheme } from '@/app/context/ThemeContext';
+import { ThemeProvider, useTheme } from '@/app/context/ThemeContext';
+import { TaskProvider } from './context/TaskContext';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 // Root layout component
 function RootLayoutContent() {
-  const { colorScheme } = useTheme();
+  // Use the theme hook to get the current color scheme
+  const { theme: colorScheme } = useTheme();
   
   return (
     <NavigationThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -47,7 +48,9 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
-      <RootLayoutContent />
+      <TaskProvider>
+        <RootLayoutContent />
+      </TaskProvider>
     </ThemeProvider>
   );
 }

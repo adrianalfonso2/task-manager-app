@@ -1,18 +1,21 @@
+// TaskStats.tsx
+// A component that displays task completion statistics with a progress bar
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useTaskContext } from '../app/context/TaskContext';
 import { ThemedText } from './ThemedText';
 import { useAppTheme } from '@/hooks/useAppTheme';
 
+// TaskStats component that shows completion progress
 export const TaskStats: React.FC = () => {
+  // Get tasks from context and current theme
   const { tasks, showArchived } = useTaskContext();
   const { theme, styles: themeStyles } = useAppTheme();
   
+  // Calculate task statistics
   const completedTasks = tasks.filter(task => task.completed).length;
   const totalTasks = tasks.length;
-  const percentComplete = totalTasks > 0 
-    ? Math.round((completedTasks / totalTasks) * 100) 
-    : 0;
+  const percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
   return (
     <View style={[styles.container, themeStyles.card]}>
@@ -29,7 +32,7 @@ export const TaskStats: React.FC = () => {
           <ThemedText style={[styles.statLabel, { color: theme.text }]}>Completed</ThemedText>
         </View>
         <View style={styles.statItem}>
-          <ThemedText style={[styles.statValue, { color: theme.text }]}>{percentComplete}%</ThemedText>
+          <ThemedText style={[styles.statValue, { color: theme.text }]}>{Math.round(percentage)}%</ThemedText>
           <ThemedText style={[styles.statLabel, { color: theme.text }]}>Progress</ThemedText>
         </View>
       </View>
@@ -37,7 +40,7 @@ export const TaskStats: React.FC = () => {
         <View 
           style={[
             styles.progressBar, 
-            { width: `${percentComplete}%`, backgroundColor: theme.primaryButtonBackground }
+            { width: `${percentage}%`, backgroundColor: theme.primaryButtonBackground }
           ]} 
         />
       </View>
@@ -45,6 +48,7 @@ export const TaskStats: React.FC = () => {
   );
 };
 
+// Styles for the task stats component
 const styles = StyleSheet.create({
   container: {
     padding: 16,
