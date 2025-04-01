@@ -35,7 +35,7 @@ This is a feature-rich task management application built with React Native and E
 
 ## Screenshots
 
-![Screenshot Description](./images/Screenshot.png)
+![Screenshot Description](./assets/images/Screenshot.png)
 
 ## Getting Started
 
