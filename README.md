@@ -37,9 +37,7 @@ This is a feature-rich task management application built with React Native and E
 
 ![Screenshot Description](./assets/images/Screenshot.png)
 
-## Getting Started
-
-### Prerequisites
+### Prerequisites Needed
 
 - Node.js (v14 or later)
 - npm (v6 or later) or yarn (v1.22 or later)
@@ -50,20 +48,21 @@ This is a feature-rich task management application built with React Native and E
 
 ### Installation
 
-1. Clone the repository
+
+1. The first step involves cloning the repository
    ```bash
    git clone <repository-url>
    cd task-manager-app
    ```
 
-2. Install dependencies
+2. After that we must install the dependencies
    ```bash
    npm install
    # or with yarn
    yarn install
    ```
 
-3. Start the development server
+3. Then we can start the development server
    ```bash
    npx expo start
    ```
@@ -72,17 +71,17 @@ This is a feature-rich task management application built with React Native and E
 
 The Task Manager app can be run in several environments:
 
-- **Web Browser**: 
+- **Web Browser(Desktop)**: 
   ```bash
   npx expo start --web
   ```
 
-- **Android Emulator**: 
+- **Android**: 
   ```bash
   npx expo start --android
   ```
 
-- **iOS Simulator**: 
+- **iOS**: 
   ```bash
   npx expo start --ios
   ```
@@ -94,31 +93,34 @@ The Task Manager app can be run in several environments:
 
 ## How to Use
 
-### Managing Tasks
-
 1. **Adding a New Task**
    - Tap the input field at the top of the screen
    - Enter a task description
    - Select a category (optional)
    - Choose a priority level (optional)
-   - Tap "Add" or press Enter
+   - Tap "Add" or press Enter on your keyboard
 
 2. **Completing Tasks**
    - Tap the checkbox next to any task to mark it as complete
    - Completed tasks will show a checkmark and strikethrough text
 
 3. **Removing Tasks**
-   - Swipe left on any task to reveal the delete option
-   - Tap the trash icon to permanently remove the task
+   - Swipe left on any task to reveal the delete option (mobile)
+   - Tap the trash icon to permanently remove the task (desktop)
 
-4. **Task Organization**
+4. **Archiving Tasks**
+  -Tap the archive bin (next to the delete icon) on a task.
+	-View archived tasks on a dedicated page.
+	-Open the archive page via the top-right archive button (next to the dark/light toggle).
+
+5. **Task Organization**
    - Use the category filters to show tasks by type
    - Toggle the archive button to hide/show completed tasks
    - Check the statistics panel to track your progress
 
 ### Theme Customization
 
-- Tap the theme toggle icon (sun/moon) in the header
+- Tap the theme toggle icon (sun/moon) in the top right corner
   - When in light mode, you'll see a moon icon (tap to switch to dark mode)
   - When in dark mode, you'll see a sun icon (tap to switch to light mode)
 
@@ -126,14 +128,16 @@ The Task Manager app can be run in several environments:
 
 ### State Management
 
-The app uses React's Context API for global state management:
+This Task Manager app uses React's Context API for global state management:
 
-- **TaskContext**: Handles all task-related operations
+- **TaskContext**: 
+  -Handles all task-related operations
   - Stores the task list with completion status
   - Provides methods for adding, updating, and deleting tasks
   - Manages task filtering and sorting
 
-- **ThemeContext**: Controls the app's visual appearance
+- **ThemeContext**: 
+  -Controls the app's visual appearance
   - Manages light/dark theme toggling
   - Provides themed styles to all components
   - Adapts to system preferences
@@ -194,12 +198,12 @@ The app uses React's Context API for global state management:
 
 ## Code Documentation
 
-The codebase includes comprehensive comments for all components and functions:
+The codebase includes comments for all components and functions:
 
-- **Component files**: Include purpose, props documentation, and usage notes
-- **Hooks**: Detailed parameter and return value documentation
-- **Context providers**: Clear explanation of state management approach
-- **Style objects**: Notes about theming implementation
+- **Component files**: This includes purpose, props documentation, and usage notes
+- **Hooks**: Have a detailed parameter and return value documentation
+- **Context providers**: Has a clear explanation of state management approach
+- **Style objects**: Contains notes about theming implementation
 
 ## Future Enhancements
 
