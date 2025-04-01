@@ -17,6 +17,8 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = ({
   const { theme } = useAppTheme();
   const priorities: PriorityType[] = ['low', 'medium', 'high'];
 
+// This is the priority selector component that allows the user to select the priority of a task
+
   return (
     <View style={[styles.container, { borderBottomColor: theme.borderColor, borderBottomWidth: StyleSheet.hairlineWidth }]}>
       <ThemedText style={[styles.label, { color: theme.text + '99' }]}>
@@ -57,6 +59,8 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = ({
     </View>
   );
 };
+
+// These are the styles for the priority selector component
 
 const styles = StyleSheet.create({
   container: {

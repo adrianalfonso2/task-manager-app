@@ -30,7 +30,7 @@ export const TaskInput: React.FC = () => {
       addTask(taskTitle.trim(), taskDescription.trim(), selectedCategory, selectedPriority);
       setTaskTitle('');
       setTaskDescription('');
-      // Keep the selected category and priority for the next task
+      // This will keep the selected category and priority for the next task
     }
   };
 

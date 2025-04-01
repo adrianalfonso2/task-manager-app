@@ -9,6 +9,7 @@ export const ArchiveToggle: React.FC = () => {
   const { showArchived, toggleShowArchived } = useTaskContext();
   const { theme } = useAppTheme();
 
+  // This is the archive toggle component that allows the user to switch between active and archived tasks
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -68,6 +69,7 @@ export const ArchiveToggle: React.FC = () => {
   );
 };
 
+// These are the styles for the archive toggle component
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',

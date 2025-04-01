@@ -11,6 +11,7 @@ interface CategoryFilterProps {
   onSelectFilter: (categoryId: string | null) => void;
 }
 
+// This is the category filter component that allows the user to filter tasks by category
 export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   selectedFilter,
   onSelectFilter,
@@ -33,12 +34,14 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
     onSelectFilter(categoryId);
   };
 
+  // This is the animation for the button
   const buttonAnimStyle = useAnimatedStyle(() => {
     return {
       transform: [{ scale: buttonScale.value }]
     };
   });
 
+  // This is the return for the category filter component
   return (
     <Animated.View 
       style={[styles.container, { borderBottomColor: theme.borderColor, borderBottomWidth: StyleSheet.hairlineWidth }]}

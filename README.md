@@ -33,7 +33,7 @@ This is a feature-rich task management application built with React Native and E
   - Optimized rendering with memo and callback patterns
   - Smooth transitions between screens and states
 
-## Screenshots
+## Screenshot
 
 ![Screenshot Description](./assets/images/Screenshot.png)
 
@@ -43,7 +43,7 @@ This is a feature-rich task management application built with React Native and E
 - npm (v6 or later) or yarn (v1.22 or later)
 - Expo CLI (`npm install -g expo-cli`)
 - For mobile development:
-  - iOS: macOS with Xcode (13+)
+  - iOS: macOS with Xcode
   - Android: Android Studio with SDK and emulator
 
 ### Installation
@@ -51,11 +51,11 @@ This is a feature-rich task management application built with React Native and E
 
 1. The first step involves cloning the repository
    ```bash
-   git clone <repository-url>
+   git clone <https://github.com/adrianalfonso2/task-manager-app.git>
    cd task-manager-app
    ```
 
-2. After that we must install the dependencies
+2. After that we have to install the dependencies
    ```bash
    npm install
    # or with yarn
@@ -109,9 +109,9 @@ The Task Manager app can be run in several environments:
    - Tap the trash icon to permanently remove the task (desktop)
 
 4. **Archiving Tasks**
-  -Tap the archive bin (next to the delete icon) on a task.
-	-View archived tasks on a dedicated page.
-	-Open the archive page via the top-right archive button (next to the dark/light toggle).
+   - Tap the archive bin (next to delete icon) on a task.
+   - View archieved tasks on a dedicated page
+   - Open the archive page via the top-right archive button (next to the dark/light toggle).
 
 5. **Task Organization**
    - Use the category filters to show tasks by type
@@ -131,13 +131,13 @@ The Task Manager app can be run in several environments:
 This Task Manager app uses React's Context API for global state management:
 
 - **TaskContext**: 
-  -Handles all task-related operations
+  - Handles all task-related operations
   - Stores the task list with completion status
   - Provides methods for adding, updating, and deleting tasks
   - Manages task filtering and sorting
 
 - **ThemeContext**: 
-  -Controls the app's visual appearance
+  - Controls the app's visual appearance
   - Manages light/dark theme toggling
   - Provides themed styles to all components
   - Adapts to system preferences
@@ -198,19 +198,7 @@ This Task Manager app uses React's Context API for global state management:
 
 ## Code Documentation
 
-The codebase includes comments for all components and functions:
-
 - **Component files**: This includes purpose, props documentation, and usage notes
 - **Hooks**: Have a detailed parameter and return value documentation
 - **Context providers**: Has a clear explanation of state management approach
 - **Style objects**: Contains notes about theming implementation
-
-## Future Enhancements
-
-- Cloud synchronization for tasks across devices
-- Recurring task scheduling
-- Due date reminders with notifications
-- Data analytics and productivity insights
-- Collaborative task sharing
-- Rich text formatting for task descriptions
-- Customizable themes beyond light/dark

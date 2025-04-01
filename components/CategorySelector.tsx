@@ -10,6 +10,7 @@ interface CategorySelectorProps {
   onSelectCategory: (categoryId: string) => void;
 }
 
+// This is the category selector component that allows the user to select a category for a task
 export const CategorySelector: React.FC<CategorySelectorProps> = ({
   selectedCategory,
   onSelectCategory,
@@ -17,6 +18,7 @@ export const CategorySelector: React.FC<CategorySelectorProps> = ({
   const { categories } = useTaskContext();
   const { theme } = useAppTheme();
 
+  // This is the return for the category selector component
   return (
     <View style={[styles.container, { borderBottomColor: theme.borderColor }]}>
       <ThemedText style={[styles.label, { color: theme.text + '99' }]}>

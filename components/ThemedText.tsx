@@ -1,4 +1,3 @@
-// ThemedText.tsx
 // A component that renders text with theme-appropriate styling
 import { Text, type TextProps, StyleSheet } from 'react-native';
 
@@ -28,7 +27,6 @@ export function ThemedText({
   type = 'default',
   ...rest
 }: ThemedTextProps) {
-  // Get the appropriate color based on the current theme
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
 
   return (
@@ -41,7 +39,6 @@ export function ThemedText({
         type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
         type === 'subtitle' ? styles.subtitle : undefined,
         type === 'link' ? styles.link : undefined,
-        // Apply any custom styles passed as props
         style,
       ]}
       {...rest}
@@ -49,9 +46,8 @@ export function ThemedText({
   );
 }
 
-/**
- * Predefined text styles for consistent typography
- */
+
+//Predefined text styles for consistent typography
 const styles = StyleSheet.create({
   default: {
     fontSize: 16,

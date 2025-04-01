@@ -21,7 +21,7 @@ export const ArchiveButton: React.FC = () => {
       });
     });
     
-    // Toggle the archive view
+    // This toggles the archive view
     toggleShowArchived();
   };
 

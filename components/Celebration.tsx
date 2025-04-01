@@ -18,7 +18,7 @@ export const Celebration: React.FC<CelebrationProps> = ({ show, onComplete }) =>
         animationRef.current.play();
       } catch (error) {
         console.error("Lottie play error:", error);
-        // Ensure callback still happens even if animation fails
+        // This ensures the callback still happens even if animation fails
         onComplete();
       }
     } else if (!show) {
@@ -55,6 +55,7 @@ export const Celebration: React.FC<CelebrationProps> = ({ show, onComplete }) =>
   );
 };
 
+// These are the styles for the celebration component
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,

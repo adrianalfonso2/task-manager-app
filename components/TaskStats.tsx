@@ -1,4 +1,3 @@
-// TaskStats.tsx
 // A component that displays task completion statistics with a progress bar
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -6,13 +5,13 @@ import { useTaskContext } from '../app/context/TaskContext';
 import { ThemedText } from './ThemedText';
 import { useAppTheme } from '@/hooks/useAppTheme';
 
-// TaskStats component that shows completion progress
+// TaskStats component that shows the current completion progress
 export const TaskStats: React.FC = () => {
   // Get tasks from context and current theme
   const { tasks, showArchived } = useTaskContext();
   const { theme, styles: themeStyles } = useAppTheme();
   
-  // Calculate task statistics
+  // This is resposible for calculating task statistics
   const completedTasks = tasks.filter(task => task.completed).length;
   const totalTasks = tasks.length;
   const percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
@@ -48,7 +47,7 @@ export const TaskStats: React.FC = () => {
   );
 };
 
-// Styles for the task stats component
+// These are the styles for the task stats component
 const styles = StyleSheet.create({
   container: {
     padding: 16,

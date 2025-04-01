@@ -48,7 +48,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, onComplete }) => {
         checkboxScale.value = withSpring(1);
       });
       
-      // Toggle immediately to avoid animation issues
+      // This toggles the task immediately to avoid animation issues
       toggleComplete(task.id);
       if (onComplete) onComplete();
     } else {
@@ -63,10 +63,10 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, onComplete }) => {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
     
-    // Set deleting state
+    // This sets the deleting state
     setIsDeleting(true);
     
-    // Delete directly without animation for web to avoid DOM issues
+    // This will delete the task directly without animation for web to avoid DOM issues
     deleteTimeoutRef.current = setTimeout(() => {
       try {
         deleteTask(task.id);
@@ -93,7 +93,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, onComplete }) => {
     };
   });
 
-  // If we're deleting, don't render the item at all on web
+  // If we're deleting it won't render the item at all on web
   if (isDeleting && Platform.OS === 'web') {
     return null;
   }

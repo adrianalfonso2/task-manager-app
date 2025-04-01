@@ -20,7 +20,7 @@ export const TaskList: React.FC = () => {
     : tasks;
 
   const handleTaskComplete = useCallback(() => {
-    // Prevent multiple celebrations from triggering at once
+    // This prevents multiple celebrations from triggering at once
     if (!showCelebration && !isAnimating) {
       setShowCelebration(true);
       setIsAnimating(true);
@@ -29,7 +29,7 @@ export const TaskList: React.FC = () => {
 
   const handleCelebrationComplete = useCallback(() => {
     setShowCelebration(false);
-    // Give a short delay before allowing new animations
+    // This will give a short delay before allowing new animations
     setTimeout(() => {
       setIsAnimating(false);
     }, 500);

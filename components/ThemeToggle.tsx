@@ -1,4 +1,3 @@
-// ThemeToggle.tsx
 // A component that provides a button to toggle between light and dark themes
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
@@ -10,7 +9,7 @@ export const ThemeToggle: React.FC = () => {
   // Get current theme and toggle function from context
   const { theme, toggleTheme } = useAppTheme();
 
-  // Determine which icon to show based on current theme
+  // This determines which icon to show based on current theme
   const icon = theme === 'light' ? 'moon' : 'sunny';
 
   return (

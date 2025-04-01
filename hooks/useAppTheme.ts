@@ -40,13 +40,12 @@ const extendedColors = {
  * @returns {object} Object containing theme colors, pre-built styles, and current color scheme
  */
 export function useAppTheme() {
-  // Get current color scheme from theme context
+  // This grabs current color scheme from theme context
   const { theme: colorScheme } = useContextTheme();
   
-  // Get theme colors based on current color scheme
+  // This  theme colors based on current color scheme
   const theme = extendedColors[colorScheme];
 
-  // Pre-built styles that use theme colors
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -91,7 +90,7 @@ export function useAppTheme() {
     },
   });
 
-  // Return theme colors, styles, and current color scheme
+  // This returns the theme colors, styles, and current color scheme
   return { 
     theme, 
     styles, 
